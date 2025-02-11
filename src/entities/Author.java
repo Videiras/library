@@ -5,17 +5,17 @@ import java.util.UUID;
 
 public class Author {
 
-    private final String ID;
+    private final Integer ID;
     private final String NAME;
     private final LocalDate BORN_DATE;
 
     public Author(String name, LocalDate bornDate) {
-        this.ID = UUID.randomUUID().toString();
+        this.ID = UUID.randomUUID().hashCode();
         this.NAME = name;
         this.BORN_DATE = bornDate;
     }
 
-    public String getId() {
+    public Integer getId() {
         return ID;
     }
 
@@ -25,5 +25,13 @@ public class Author {
 
     public String getNAME() {
         return NAME;
+    }
+
+    @Override
+    public String toString(){
+        return NAME
+            + " | "
+            + "ID: "
+            + ID;
     }
 }
