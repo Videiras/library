@@ -1,14 +1,15 @@
 package entities;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class History {
 
     private final Client CLIENT;
-    private final Date CHECKOUT_DATE;
-    private final Date DUE_DATE;
+    private final LocalDate CHECKOUT_DATE;
+    private final LocalDate DUE_DATE;
 
-    public History(Client CLIENT, Date CHECKOUT_DATE, Date DUE_DATE) {
+    public History(Client CLIENT, LocalDate CHECKOUT_DATE, LocalDate DUE_DATE) {
         this.CLIENT = CLIENT;
         this.CHECKOUT_DATE = CHECKOUT_DATE;
         this.DUE_DATE = DUE_DATE;
@@ -18,11 +19,11 @@ public class History {
         return CLIENT;
     }
 
-    public Date getCHECKOUT_DATE() {
+    public LocalDate getCHECKOUT_DATE() {
         return CHECKOUT_DATE;
     }
 
-    public Date getDUE_DATE() {
+    public LocalDate getDUE_DATE() {
         return DUE_DATE;
     }
 }

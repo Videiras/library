@@ -67,12 +67,13 @@ public class Book {
     @Override
     public String toString(){
         return TITLE
-            + " | "
-            + "Autor: "
+            + " | Autor: "
             + AUTHOR
             + " | Data de registro: "
             + getREGISTRATION_DATE()
             + " | Data de atualização: "
-            + getUpdateDate();
+            + getUpdateDate()
+            + " | ID: "
+            + ID;
     }
 }

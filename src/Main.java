@@ -2,6 +2,7 @@ import entities.Author;
 import entities.Book;
 import entities.Client;
 import entities.Library;
+import services.LoginSystem;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -17,26 +18,34 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         Library library = new Library();
 
-        Client client1 = new Client("Victor", LocalDate.of(2000, 10, 5), "jevunidos@gmail.com");
-        Client client2 = new Client("Jose", LocalDate.of(2004, 2, 4), "jevunidos@gmail.com");
+        Client client1 = new Client("Victor", LocalDate.of(2000, 10, 5), "victor@gmail.com");
+        Client client2 = new Client("Jose", LocalDate.of(2004, 2, 4), "jose@gmail.com");
         Client client3 = new Client("Carlos", LocalDate.of(2006, 1, 30), "carlos@gmail.com");
 
         library.addClient(client1);
         library.addClient(client2);
         library.addClient(client3);
 
-        System.out.println(client1.equals(client2));
-        System.out.println(client2.equals(client3));
-        System.out.println(client1.equals(client3));
+        Book book1 = new Book("Pai Rico Pai Pobre", library.getAuthors().getFirst());
+        Book book2 = new Book("Harry Potter e isso ai", library.getAuthors().getFirst());
+        Book book3 = new Book("Harry potter e isso ai 2", library.getAuthors().getFirst());
+
+        library.addBooks(book1);
+        library.addBooks(book2);
+        library.addBooks(book3);
 
         for(Client c : library.getClients()) {
             System.out.println(c);
         }
 
-        for(int i = 0; i < 3; i++) {
-            library.registerClient(sc, dtf);
+        Client loggedClient = LoginSystem.login(sc, library.getClients(), library);
+
+        if(loggedClient == null) {
+            System.out.println("Login falhou, tente novamente!");
         }
-        library.login(sc);
+        else {
+            library.loan(sc, loggedClient, dtf);
+        }
 
     }
 }

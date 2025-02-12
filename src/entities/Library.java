@@ -1,5 +1,7 @@
 package entities;
 
+import entities.enums.Disponibilty;
+
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -116,7 +118,7 @@ public class Library {
         }
     }
 
-    public void registerClient(Scanner sc, DateTimeFormatter dtf) {
+    public Client registerClient(Scanner sc, DateTimeFormatter dtf) {
         System.out.print("Digite seu nome completo: ");
         String name = sc.nextLine();
         System.out.print("Digite sua data de nascimento (dd/MM/yyyy): ");
@@ -140,36 +142,36 @@ public class Library {
             for (Client c : clients) {
                 if (c.equals(newClient)) {
                     System.out.println("Já existe um cliente com este E-mail! Tente outro E-mail: ");
-                    email = sc.nextLine();
-                } else {
-                    clientExists = false;
+                    newClient.setEmail(sc.nextLine());
                 }
             }
+            clientExists = false;
         }
 
         if(!clientExists) {
             clients.add(newClient);
             System.out.println("Cliente registrado com sucesso!");
         }
+        return newClient;
     }
 
-    public void login(Scanner sc){
-        System.out.print("Digite seu email: ");
-        String email = sc.nextLine();
-        boolean clientFound = false;
-
-
-        for(Client c : clients) {
-            if(c.getEmail() == email) {
-                System.out.println("Boas vindas! " + c.getName());
-                clientFound = true;
-                break;
+    public void loan(Scanner sc, Client loggedClient, DateTimeFormatter dtf){
+        System.out.println("Catálogo disponível para empréstimo: ");
+        for(Book b : books) {
+            if(b.getDisponibilty() == Disponibilty.available) {
+                System.out.println(b);
+            }
+        }
+        System.out.println();
+        System.out.print("Digite o ID de um livro do catálogo para espréstimo: ");
+        int id = sc.nextInt();
+        boolean bookFounded;
+        for(Book b : books) {
+            if(id == b.getID()) {
+                System.out.println("Livro selecionado com sucesso, data de devolução: " + dtf.format(LocalDate.now().plusWeeks(1)));
             }
         }
 
-        if(!clientFound){
-            System.out.println("Cliente não encontrado!");
-
-        }
     }
+
 }
