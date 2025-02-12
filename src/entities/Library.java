@@ -13,6 +13,7 @@ public class Library {
     private List<Book> books = new ArrayList<>();
     private List<Author> authors = new ArrayList<>();
     private List<Loan> loans = new ArrayList<>();
+    private List<Client> clients = new ArrayList<>();
 
     public Library(){
         authors.add(new Author("Autor desconhecido", LocalDate.now()));
@@ -44,6 +45,18 @@ public class Library {
 
     public List<Loan> getLoans() {
         return loans;
+    }
+
+    public List<Client> getClients() {
+        return clients;
+    }
+
+    public void addClient(Client client) {
+        clients.add(client);
+    }
+
+    public void removeClient(Client client) {
+        clients.remove(client);
     }
 
     public void registerBook(Scanner sc, DateTimeFormatter dtf) {
@@ -100,6 +113,63 @@ public class Library {
             } catch (DateTimeParseException e) {
                 System.out.println("Formato da data inválido, por favor, utilize o formato: dd/MM/yyyy");
             }
+        }
+    }
+
+    public void registerClient(Scanner sc, DateTimeFormatter dtf) {
+        System.out.print("Digite seu nome completo: ");
+        String name = sc.nextLine();
+        System.out.print("Digite sua data de nascimento (dd/MM/yyyy): ");
+        LocalDate bornDate = null;
+        boolean validDate = false;
+        while(!validDate) {
+            try {
+                bornDate = LocalDate.parse(sc.nextLine(), dtf);
+                validDate = true;
+            } catch (DateTimeParseException e) {
+                System.out.println("Formato de data inválido, por favor, digite uma data no formato (dd/MM/yyyy)");
+            }
+        }
+        System.out.print("Digite seu E-mail: ");
+        String email = sc.nextLine();
+        boolean clientExists = true;
+
+        Client newClient = new Client(name, bornDate, email);
+
+        while(clientExists) {
+            for (Client c : clients) {
+                if (c.equals(newClient)) {
+                    System.out.println("Já existe um cliente com este E-mail! Tente outro E-mail: ");
+                    email = sc.nextLine();
+                } else {
+                    clientExists = false;
+                }
+            }
+        }
+
+        if(!clientExists) {
+            clients.add(newClient);
+            System.out.println("Cliente registrado com sucesso!");
+        }
+    }
+
+    public void login(Scanner sc){
+        System.out.print("Digite seu email: ");
+        String email = sc.nextLine();
+        boolean clientFound = false;
+
+
+        for(Client c : clients) {
+            if(c.getEmail() == email) {
+                System.out.println("Boas vindas! " + c.getName());
+                clientFound = true;
+                break;
+            }
+        }
+
+        if(!clientFound){
+            System.out.println("Cliente não encontrado!");
+
         }
     }
 }
