@@ -1,8 +1,7 @@
 package entities;
 
-import entities.enums.Disponibilty;
+import entities.enums.Disponibility;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -14,7 +13,7 @@ public class Book {
     private final Integer ID;
     private final String TITLE;
     private final Author AUTHOR;
-    private Disponibilty disponibilty;
+    private Disponibility disponibility;
     private final LocalDate REGISTRATION_DATE;
     private LocalDate updateDate;
 
@@ -24,9 +23,19 @@ public class Book {
         this.ID = UUID.randomUUID().hashCode();
         this.TITLE = title;
         this.AUTHOR = author;
-        this.disponibilty = Disponibilty.available;
+        this.disponibility = Disponibility.available;
         this.REGISTRATION_DATE = LocalDate.now();
         this.updateDate = REGISTRATION_DATE;
+    }
+
+    public Book(Integer ID, String TITLE, Author AUTHOR, Disponibility disponibility, LocalDate REGISTRATION_DATE, LocalDate updateDate, List<History> loanHistory) {
+        this.ID = ID;
+        this.TITLE = TITLE;
+        this.AUTHOR = AUTHOR;
+        this.disponibility = disponibility;
+        this.REGISTRATION_DATE = REGISTRATION_DATE;
+        this.updateDate = updateDate;
+        this.loanHistory = loanHistory;
     }
 
     public Integer getID() {
@@ -41,12 +50,12 @@ public class Book {
         return AUTHOR;
     }
 
-    public Disponibilty getDisponibilty() {
-        return disponibilty;
+    public Disponibility getDisponibility() {
+        return disponibility;
     }
 
-    public void setDisponibilty(Disponibilty disponibilty) {
-        this.disponibilty = disponibilty;
+    public void setDisponibility(Disponibility disponibility) {
+        this.disponibility = disponibility;
         this.updateDate = LocalDate.now();
     }
 
@@ -64,6 +73,10 @@ public class Book {
         return loanHistory;
     }
 
+    public void setLoanHistory(List<History> loanHistory) {
+        this.loanHistory = loanHistory;
+    }
+
     @Override
     public String toString(){
         return TITLE
@@ -76,4 +89,19 @@ public class Book {
             + " | ID: "
             + ID;
     }
+
+    public String toFile() {
+        return ID
+                + ","
+                + TITLE
+                + ","
+                + AUTHOR.getId()
+                + ","
+                + disponibility
+                + ","
+                + REGISTRATION_DATE
+                + ","
+                + updateDate;
+    }
+
 }

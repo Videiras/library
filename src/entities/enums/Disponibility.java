@@ -1,6 +1,6 @@
 package entities.enums;
 
-public enum Disponibilty {
+public enum Disponibility {
 
     available,
     unavailable;

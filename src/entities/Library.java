@@ -1,8 +1,7 @@
 package entities;
 
-import entities.enums.Disponibilty;
+import entities.enums.Disponibility;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -134,21 +133,21 @@ public class Library {
         }
         System.out.print("Digite seu E-mail: ");
         String email = sc.nextLine();
-        boolean clientExists = true;
+        boolean clientExists = false;
 
         Client newClient = new Client(name, bornDate, email);
 
-        while(clientExists) {
+        while(!clientExists) {
             for (Client c : clients) {
                 if (c.equals(newClient)) {
                     System.out.println("Já existe um cliente com este E-mail! Tente outro E-mail: ");
                     newClient.setEmail(sc.nextLine());
                 }
             }
-            clientExists = false;
+            clientExists = true;
         }
 
-        if(!clientExists) {
+        if(clientExists) {
             clients.add(newClient);
             System.out.println("Cliente registrado com sucesso!");
         }
@@ -158,7 +157,7 @@ public class Library {
     public void loan(Scanner sc, Client loggedClient, DateTimeFormatter dtf){
         System.out.println("Catálogo disponível para empréstimo: ");
         for(Book b : books) {
-            if(b.getDisponibilty() == Disponibilty.available) {
+            if(b.getDisponibility() == Disponibility.available) {
                 System.out.println(b);
             }
         }

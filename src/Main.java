@@ -34,8 +34,8 @@ public class Main {
         library.addBooks(book2);
         library.addBooks(book3);
 
-        for(Client c : library.getClients()) {
-            System.out.println(c);
+        for(Book b : library.getBooks()) {
+            System.out.println(b.toFile());
         }
 
         Client loggedClient = LoginSystem.login(sc, library.getClients(), library);

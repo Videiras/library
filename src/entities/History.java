@@ -1,6 +1,7 @@
 package entities;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class History {
@@ -26,4 +27,14 @@ public class History {
     public LocalDate getDUE_DATE() {
         return DUE_DATE;
     }
+
+    public String toFile(){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return CLIENT.getID()
+                + ","
+                + dtf.format(CHECKOUT_DATE)
+                + ","
+                + dtf.format(DUE_DATE);
+    }
+
 }
