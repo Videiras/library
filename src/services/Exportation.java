@@ -10,26 +10,31 @@ import java.util.List;
 
 public class Exportation {
 
-    public void exportCatalog(List<Book> catalog, String[] books) {
+    public static void exportCatalog(List<Book> catalog) {
         for(Book b : catalog) {
-            String path = ".\\books" + b.getTITLE();
+            String path = ".\\books\\" + b.getTITLE();
             File directory = new File(path);
             File book = new File(path + "\\" + b.getTITLE() + ".txt");
-            File loanHistory = new File(path + "\\loanHistory.txt");
+            File loanHistory = new File(path + "\\Historico de emprestimos.txt");
 
             try {
                 if (!directory.exists() && !directory.isDirectory()) {
-                    new File(path).mkdir();
+                    new File(path).mkdirs();
                 }
                 if (!book.exists()) {
                     book.createNewFile();
                 }
-            } catch (Exception e) {
+                if (!loanHistory.exists()) {
+                    loanHistory.createNewFile();
+                }
+            } catch (IOException e) {
                 throw new RuntimeException(e.getMessage());
             }
+
             for(History history : b.getLoanHistory()) {
-                try(BufferedWriter bw = new BufferedWriter(new FileWriter(path + "\\loanHistory.txt"))) {
+                try(BufferedWriter bw = new BufferedWriter(new FileWriter(loanHistory))) {
                     bw.write(history.toFile());
+                    bw.newLine();
                 }
                 catch (IOException e) {
                     throw new RuntimeException(e.getMessage());
@@ -44,21 +49,52 @@ public class Exportation {
                 throw new RuntimeException(e.getMessage());
             }
         }
+
+        exportBookNames(catalog);
+
     }
 
-    public void exportClients(List<Client> clients) {
+    public static void exportBookNames(List<Book> catalog) {
+        File file = new File(".\\books\\1 - Livros.txt");
+
+        try{
+            if(!file.exists()) {
+                file.createNewFile();
+            }
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+            for(Book book : catalog) {
+                bw.write(book.getTITLE());
+                bw.newLine();
+            }
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+    }
+
+    public static void exportClients(List<Client> clients) {
         String path =".\\clients";
         File directory = new File(path);
         File file = new File(directory + "\\clients.txt");
 
-        try(BufferedWriter bw = new BufferedWriter(new FileWriter(".\\clients\\clients.txt"))) {
+        try {
             if(!directory.exists() && !directory.isDirectory()) {
                 new File(path).mkdir();
             }
             if(!file.exists()) {
                 file.createNewFile();
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter(".\\clients\\clients.txt"))) {
             for(Client client : clients) {
                 bw.write(client.toFile());
                 bw.newLine();
@@ -69,25 +105,30 @@ public class Exportation {
         }
     }
 
-    public void exportAuthors(List<Author> authors) {
+    public static void exportAuthors(List<Author> authors) {
         String path = ".\\authors";
         File directory = new File(path);
-        File file = new File(directory + "\\authors");
+        File file = new File(directory + "\\authors.txt");
 
-        try(BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
-            if(!directory.exists() && !directory.exists()) {
+        try {
+            if (!directory.exists() && !directory.exists()) {
                 new File(path).mkdir();
             }
-            if(!file.exists()) {
+            if (!file.exists()) {
                 file.createNewFile();
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
 
             for(Author author : authors) {
                 bw.write(author.toFile());
                 bw.newLine();
             }
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
     }

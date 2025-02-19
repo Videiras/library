@@ -17,7 +17,6 @@ public class Library {
     private List<Client> clients = new ArrayList<>();
 
     public Library(){
-        authors.add(new Author("Autor desconhecido", LocalDate.now()));
     }
 
     public List<Book> getBooks() {

@@ -10,7 +10,7 @@ import java.util.List;
 
 public class Importation {
 
-    public void importCatalog(List<Author> authors, Library library, List<Client> client, String[] books) {
+    public static void importCatalog(List<Author> authors, Library library, List<Client> client, String[] books) {
 
         for(String book : books) {
             File file = new File(".\\books" + book + "\\" + book + ".txt");
@@ -61,7 +61,7 @@ public class Importation {
         }
 }
 
-    public void importClients(Library library) {
+    public static void importClients(Library library) {
         File file = new File(".\\clients\\clients.txt");
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))){
@@ -82,7 +82,7 @@ public class Importation {
         }
     }
 
-    public void importAuthors(List<Author> authors) {
+    public static void importAuthors(List<Author> authors) {
         File author = new File(".\\authors\\authors.txt");
 
         try(BufferedReader br = new BufferedReader(new FileReader(author))) {

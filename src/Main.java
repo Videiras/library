@@ -2,6 +2,7 @@ import entities.Author;
 import entities.Book;
 import entities.Client;
 import entities.Library;
+import services.Exportation;
 import services.LoginSystem;
 
 import java.time.LocalDate;
@@ -21,28 +22,17 @@ public class Main {
 
         library.addClient(client1);
 
+        Author author = new Author("Nome teste", LocalDate.of(1987, 10, 30));
 
+        library.addAuthor(author);
 
-        Book book1 = new Book("Pai Rico Pai Pobre", library.getAuthors().getFirst());
-        Book book2 = new Book("Harry Potter e isso ai", library.getAuthors().getFirst());
-        Book book3 = new Book("Harry potter e isso ai 2", library.getAuthors().getFirst());
+        Book book1 = new Book("Pai Rico Pai Pobre", author);
+        Book book2 = new Book("Pai Pobre Filho Mais", author);
 
         library.addBooks(book1);
         library.addBooks(book2);
-        library.addBooks(book3);
 
-        for(Book b : library.getBooks()) {
-            System.out.println(b.toFile());
-        }
-
-        Client loggedClient = LoginSystem.login(sc, library.getClients(), library);
-
-        if(loggedClient == null) {
-            System.out.println("Login falhou, tente novamente!");
-        }
-        else {
-            library.loan(sc, loggedClient, dtf);
-        }
+        Exportation.exportCatalog(library.getBooks());
 
     }
 }
