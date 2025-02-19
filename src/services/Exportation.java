@@ -1,5 +1,6 @@
 package services;
 
+import entities.Author;
 import entities.Book;
 import entities.Client;
 import entities.History;
@@ -43,13 +44,21 @@ public class Exportation {
                 throw new RuntimeException(e.getMessage());
             }
         }
-
-
-
     }
 
     public void exportClients(List<Client> clients) {
+        String path =".\\clients";
+        File directory = new File(path);
+        File file = new File(directory + "\\clients.txt");
+
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(".\\clients\\clients.txt"))) {
+            if(!directory.exists() && !directory.isDirectory()) {
+                new File(path).mkdir();
+            }
+            if(!file.exists()) {
+                file.createNewFile();
+            }
+
             for(Client client : clients) {
                 bw.write(client.toFile());
                 bw.newLine();
@@ -59,4 +68,28 @@ public class Exportation {
             throw new RuntimeException(e);
         }
     }
+
+    public void exportAuthors(List<Author> authors) {
+        String path = ".\\authors";
+        File directory = new File(path);
+        File file = new File(directory + "\\authors");
+
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+            if(!directory.exists() && !directory.exists()) {
+                new File(path).mkdir();
+            }
+            if(!file.exists()) {
+                file.createNewFile();
+            }
+
+            for(Author author : authors) {
+                bw.write(author.toFile());
+                bw.newLine();
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
 }

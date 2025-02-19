@@ -3,10 +3,7 @@ package services;
 import entities.*;
 import entities.enums.Disponibility;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +13,7 @@ public class Importation {
     public void importCatalog(List<Author> authors, Library library, List<Client> client, String[] books) {
 
         for(String book : books) {
-            File file = new File(".\\books\\" + book + "\\" + book + ".txt");
+            File file = new File(".\\books" + book + "\\" + book + ".txt");
 
             try {
                 List<History> loanHistory = new ArrayList<>();
@@ -57,14 +54,16 @@ public class Importation {
                     line = readBook.readLine();
                 }
 
-            } catch (IOException e) {
-                e.getMessage();
+            }
+            catch (IOException e) {
+                throw new RuntimeException(e.getMessage());
             }
         }
 }
 
     public void importClients(Library library) {
         File file = new File(".\\clients\\clients.txt");
+
         try (BufferedReader br = new BufferedReader(new FileReader(file))){
             String line = br.readLine();
             while (line != null) {
@@ -79,7 +78,26 @@ public class Importation {
             }
         }
         catch (IOException e) {
-            e.getMessage();
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public void importAuthors(List<Author> authors) {
+        File author = new File(".\\authors\\authors.txt");
+
+        try(BufferedReader br = new BufferedReader(new FileReader(author))) {
+            String line = br.readLine();
+            while(line != null) {
+                String[] authorItems = line.split(",");
+                int authorID = Integer.parseInt(authorItems[0]);
+                String name = authorItems[1];
+                LocalDate bornDate = LocalDate.parse(authorItems[3]);
+
+                authors.add(new Author(authorID, name, bornDate));
+                line = br.readLine();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 }

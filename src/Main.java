@@ -14,17 +14,14 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
 
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         Scanner sc = new Scanner(System.in);
         Library library = new Library();
 
-        Client client1 = new Client("Victor", LocalDate.of(2000, 10, 5), "victor@gmail.com");
-        Client client2 = new Client("Jose", LocalDate.of(2004, 2, 4), "jose@gmail.com");
-        Client client3 = new Client("Carlos", LocalDate.of(2006, 1, 30), "carlos@gmail.com");
+        Client client1 = new Client("Victor Alexandre", LocalDate.of(2004, 7, 2), "jevunidos@gmail.com");
 
         library.addClient(client1);
-        library.addClient(client2);
-        library.addClient(client3);
+
+
 
         Book book1 = new Book("Pai Rico Pai Pobre", library.getAuthors().getFirst());
         Book book2 = new Book("Harry Potter e isso ai", library.getAuthors().getFirst());

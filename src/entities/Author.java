@@ -15,6 +15,12 @@ public class Author {
         this.BORN_DATE = bornDate;
     }
 
+    public Author(Integer ID, String NAME, LocalDate BORN_DATE) {
+        this.ID = ID;
+        this.NAME = NAME;
+        this.BORN_DATE = BORN_DATE;
+    }
+
     public Integer getId() {
         return ID;
     }
@@ -33,5 +39,13 @@ public class Author {
             + " | "
             + "ID: "
             + ID;
+    }
+
+    public String toFile() {
+        return ID
+                + ","
+                + NAME
+                + ","
+                + BORN_DATE;
     }
 }
