@@ -20,6 +20,13 @@ public class Client {
         this.email = email;
     }
 
+    public Client(Integer ID, String NAME, LocalDate BORN_DATE, String email) {
+        this.ID = ID;
+        this.NAME = NAME;
+        this.BORN_DATE = BORN_DATE;
+        this.email = email;
+    }
+
     public Integer getID() {
         return ID;
     }
@@ -49,6 +56,16 @@ public class Client {
             + email
             + " | Data de nascimento: "
             + dtf.format(BORN_DATE);
+    }
+
+    public String toFile() {
+        return ID
+            + ","
+            + NAME
+            + ","
+            + BORN_DATE
+            + ","
+            + email;
     }
 
     @Override

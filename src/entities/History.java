@@ -32,9 +32,9 @@ public class History {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         return CLIENT.getID()
                 + ","
-                + dtf.format(CHECKOUT_DATE)
+                + CHECKOUT_DATE
                 + ","
-                + dtf.format(DUE_DATE);
+                + DUE_DATE;
     }
 
 }

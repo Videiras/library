@@ -73,10 +73,6 @@ public class Book {
         return loanHistory;
     }
 
-    public void setLoanHistory(List<History> loanHistory) {
-        this.loanHistory = loanHistory;
-    }
-
     @Override
     public String toString(){
         return TITLE

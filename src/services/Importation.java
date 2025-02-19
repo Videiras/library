@@ -8,40 +8,36 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Import {
+public class Importation {
 
-    public List<Book> importCatalog(List<Author> authors, Library library, String[] clients, List<Client> client) {
-        for (String s : clients) {
-            File catalog = new File(".\\" + s  + "\\" + s + ".txt");
+    public void importCatalog(List<Author> authors, Library library, List<Client> client, String[] books) {
+
+        for(String book : books) {
+            File file = new File(".\\books\\" + book + "\\" + book + ".txt");
 
             try {
-                if (!catalog.exists()) {
-                    catalog.createNewFile();
-                }
-
                 List<History> loanHistory = new ArrayList<>();
 
-                BufferedReader history = new BufferedReader(new FileReader("\\" + s + "\\loanHistory.txt"));
+                BufferedReader history = new BufferedReader(new FileReader(".\\books" + book + "\\loanHistory.txt"));
                 String historyLine = history.readLine();
-                while(historyLine != null) {
+                while (historyLine != null) {
                     String[] historyItems = historyLine.split(",");
-                    int ID = Integer.parseInt(historyItems[0]);
+                    int ClientID = Integer.parseInt(historyItems[0]);
                     LocalDate CHECKOUT_DATE = LocalDate.parse(historyItems[1]);
                     LocalDate DUE_DATE = LocalDate.parse(historyItems[2]);
-                    for(Client c : client) {
-                        if(c.getID() == ID) {
+                    for (Client c : client) {
+                        if (c.getID() == ClientID) {
                             loanHistory.add(new History(c, CHECKOUT_DATE, DUE_DATE));
                         }
                     }
                     historyLine = history.readLine();
                 }
 
-                BufferedReader book = new BufferedReader(new FileReader(catalog));
-                String line = book.readLine();
+                BufferedReader readBook = new BufferedReader(new FileReader(file));
+                String line = readBook.readLine();
 
                 while (line != null) {
                     String[] catalogItens = line.split(",");
@@ -58,15 +54,32 @@ public class Import {
                         }
                     }
 
-                    line = book.readLine();
+                    line = readBook.readLine();
                 }
 
             } catch (IOException e) {
                 e.getMessage();
             }
         }
+}
 
-        return null;
+    public void importClients(Library library) {
+        File file = new File(".\\clients\\clients.txt");
+        try (BufferedReader br = new BufferedReader(new FileReader(file))){
+            String line = br.readLine();
+            while (line != null) {
+                String[] clientItems = line.split(",");
+                int ID = Integer.parseInt(clientItems[0]);
+                String name = clientItems[1];
+                LocalDate BORN_DATE = LocalDate.parse(clientItems[2]);
+                String email = clientItems[3];
 
+                library.addClient(new Client(ID, name, BORN_DATE, email));
+                line = br.readLine();
+            }
+        }
+        catch (IOException e) {
+            e.getMessage();
+        }
     }
 }
