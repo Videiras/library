@@ -49,12 +49,6 @@ public class Exportation {
                 throw new RuntimeException(e.getMessage());
             }
         }
-
-        exportBookNames(catalog);
-
-    }
-
-    public static void exportBookNames(List<Book> catalog) {
         File file = new File(".\\books\\1 - Livros.txt");
 
         try{
@@ -75,7 +69,6 @@ public class Exportation {
         catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
-
     }
 
     public static void exportClients(List<Client> clients) {
