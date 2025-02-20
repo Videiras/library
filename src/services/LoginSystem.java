@@ -2,6 +2,7 @@ package services;
 
 import entities.Client;
 import entities.Library;
+import entities.enums.IsGuest;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -14,7 +15,7 @@ public class LoginSystem {
         System.out.print("Digite seu email: ");
         String email = sc.nextLine();
         boolean clientFound = false;
-        Client loggedClient = new Client("Convidado", LocalDate.now(), email);
+        Client loggedClient = new Client("Convidado", LocalDate.now(), email, IsGuest.GUEST);
 
         for(Client c : clients) {
             if(c.equals(loggedClient)) {
@@ -34,10 +35,9 @@ public class LoginSystem {
                 loggedClient = library.registerClient(sc, dtf);
             }
             else {
-                return null;
+                return loggedClient;
             }
         }
         return loggedClient;
     }
-
 }

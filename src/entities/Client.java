@@ -1,8 +1,10 @@
 package entities;
 
+import entities.enums.IsGuest;
+import entities.enums.Pending;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -12,19 +14,28 @@ public class Client {
     private final String NAME;
     private final LocalDate BORN_DATE;
     private String email;
+    private Pending pending;
+    private IsGuest isGuest;
+    private Integer borrowedBook;
 
-    public Client(String name, LocalDate bornDate, String email) {
+    public Client(String name, LocalDate bornDate, String email, IsGuest isGuest) {
         this.ID = UUID.randomUUID().hashCode();
         this.NAME = name;
         this.BORN_DATE = bornDate;
         this.email = email;
+        this.isGuest = isGuest;
+        this.pending = Pending.no;
+        this.borrowedBook = 0;
     }
 
-    public Client(Integer ID, String NAME, LocalDate BORN_DATE, String email) {
+    public Client(Integer ID, String NAME, LocalDate BORN_DATE, String email, Pending pending, Integer borrowedBook, IsGuest isGuest) {
         this.ID = ID;
         this.NAME = NAME;
         this.BORN_DATE = BORN_DATE;
         this.email = email;
+        this.pending = pending;
+        this.isGuest = isGuest;
+        this.borrowedBook = borrowedBook;
     }
 
     public Integer getID() {
@@ -47,6 +58,30 @@ public class Client {
         this.email = email;
     }
 
+    public Pending getPending() {
+        return pending;
+    }
+
+    public void setPending(Pending pending) {
+        this.pending = pending;
+    }
+
+    public IsGuest getIsGuest() {
+        return isGuest;
+    }
+
+    public void setIsGuest(IsGuest isGuest) {
+        this.isGuest = isGuest;
+    }
+
+    public Integer getBorrowedBook() {
+        return borrowedBook;
+    }
+
+    public void setBorrowedBook(Integer borrowedBook) {
+        this.borrowedBook = borrowedBook;
+    }
+
     @Override
     public String toString(){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -65,7 +100,11 @@ public class Client {
             + ","
             + BORN_DATE
             + ","
-            + email;
+            + email
+            + ","
+            + pending
+            + ","
+            + isGuest;
     }
 
     @Override

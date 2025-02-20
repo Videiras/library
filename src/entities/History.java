@@ -3,17 +3,18 @@ package entities;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Objects;
 
 public class History {
 
     private final Client CLIENT;
     private final LocalDate CHECKOUT_DATE;
-    private final LocalDate DUE_DATE;
+    private LocalDate dueDate;
 
-    public History(Client CLIENT, LocalDate CHECKOUT_DATE, LocalDate DUE_DATE) {
+    public History(Client CLIENT, LocalDate CHECKOUT_DATE, LocalDate dueDate) {
         this.CLIENT = CLIENT;
         this.CHECKOUT_DATE = CHECKOUT_DATE;
-        this.DUE_DATE = DUE_DATE;
+        this.dueDate = dueDate;
     }
 
     public Client getCLIENT() {
@@ -25,7 +26,11 @@ public class History {
     }
 
     public LocalDate getDUE_DATE() {
-        return DUE_DATE;
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
     }
 
     public String toFile(){
@@ -34,7 +39,18 @@ public class History {
                 + ","
                 + CHECKOUT_DATE
                 + ","
-                + DUE_DATE;
+                + dueDate;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        History history = (History) o;
+        return Objects.equals(CLIENT, history.CLIENT) && Objects.equals(CHECKOUT_DATE, history.CHECKOUT_DATE);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(CLIENT, CHECKOUT_DATE);
+    }
 }

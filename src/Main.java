@@ -1,13 +1,13 @@
-import entities.Author;
 import entities.Book;
 import entities.Client;
 import entities.Library;
+import entities.enums.IsGuest;
 import services.Exportation;
+import services.Importation;
 import services.LoginSystem;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.Scanner;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -16,23 +16,68 @@ public class Main {
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         Library library = new Library();
 
-        Client client1 = new Client("Victor Alexandre", LocalDate.of(2004, 7, 2), "jevunidos@gmail.com");
+        Importation.importClients(library);
+        Importation.importAuthors(library.getAuthors());
+        Importation.importCatalog(library.getAuthors(), library, library.getClients());
 
-        library.addClient(client1);
+        System.out.println("Biblioteca!");
+        Client loggedClient = new Client("Convidado", LocalDate.now(), null, IsGuest.GUEST);
+        System.out.println();
+        boolean exit = false;
 
-        Author author = new Author("Nome teste", LocalDate.of(1987, 10, 30));
+        while(!exit) {
+            System.out.println("Menu: ");
+            System.out.println("1 - Ver catálogo completo");
+            System.out.println("2 - Registrar-se");
+            System.out.println("3 - Fazer Login");
+            System.out.println("4 - Solicitar empréstimo de um livro");
+            System.out.println("5 - Realizar devolução de empréstimo");
+            System.out.println("6 - Adicionar um livro ao catálogo");
+            System.out.println("7 - Sair");
+            int selection = sc.nextInt();
 
-        library.addAuthor(author);
+            if (selection == 1) {
+                for (Book b : library.getBooks()) {
+                    System.out.println(b.getTITLE());
+                }
+                System.out.println();
+            }
 
-        Book book1 = new Book("Pai Rico Pai Pobre", author);
-        Book book2 = new Book("Pai Pobre Filho Mais", author);
+            else if (selection == 2) {
+                library.registerClient(sc, dtf);
+            }
 
-        library.addBooks(book1);
-        library.addBooks(book2);
+            else if (selection == 3) {
+                loggedClient = LoginSystem.login(sc, library.getClients(), library);
+            }
 
-        Exportation.exportCatalog(library.getBooks());
+            else if (selection == 4) {
+                if (loggedClient.getIsGuest() != IsGuest.GUEST) {
+                    library.loan(sc, loggedClient, dtf);
+                }
+                else {
+                    System.out.println("Somente client's com registro podem solicitar empréstimos!");
+                }
+            }
 
+            else if (selection == 5) {
+                library.devolution(loggedClient, library, dtf, sc);
+            }
+
+            else if (selection == 6) {
+                library.registerBook(sc, dtf, library);
+            }
+
+            else if (selection == 7) {
+                System.out.println("Obrigado por visitar a biblioteca!");
+                Exportation.exportAuthors(library.getAuthors());
+                Exportation.exportCatalog(library.getBooks());
+                Exportation.exportClients(library.getClients());
+                exit = true;
+            }
+        }
     }
 }

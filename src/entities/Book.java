@@ -69,8 +69,16 @@ public class Book {
         return dtf.format(updateDate);
     }
 
+    public void setUpdateDate(LocalDate updateDate) {
+        this.updateDate = updateDate;
+    }
+
     public List<History> getLoanHistory() {
         return loanHistory;
+    }
+
+    public void addLoanHistory(History history) {
+        loanHistory.add(history);
     }
 
     @Override

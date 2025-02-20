@@ -62,8 +62,7 @@ public class Exportation {
 
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
             for(Book book : catalog) {
-                bw.write(book.getTITLE());
-                bw.newLine();
+                bw.write(book.getTITLE() + ",");
             }
         }
         catch (IOException e) {

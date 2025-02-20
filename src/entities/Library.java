@@ -1,6 +1,8 @@
 package entities;
 
 import entities.enums.Disponibility;
+import entities.enums.IsGuest;
+import entities.enums.Pending;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -59,41 +61,45 @@ public class Library {
         clients.remove(client);
     }
 
-    public void registerBook(Scanner sc, DateTimeFormatter dtf) {
-        System.out.print("Título do livro: ");
-        String title = sc.nextLine();
-        System.out.print("ID do Autor: ");
+    public void registerBook(Scanner sc, DateTimeFormatter dtf, Library library) {
+        boolean isEverythingCorrect = false;
+        while(!isEverythingCorrect) {
+            System.out.println("Digite o título do livro: ");
+            String title = sc.nextLine();
+            System.out.println("Autores disponíveis: ");
 
-        Author author = null;
-        boolean authorExists = false;
-
-        while (!authorExists) {
-            int authorID = sc.nextInt();
-            sc.nextLine();
-
-            for (Author a : authors) {
-                if (authorID == a.getId()) {
-                    author = a;
-                    authorExists = true;
-                    break;
-                }
+            for (Author author : library.getAuthors()) {
+                System.out.println(author);
             }
 
-            if (!authorExists) {
-                System.out.print("Autor não encontrado, digitação do ID está correta? (s/n) ");
-                char confirmation = sc.next().toLowerCase().charAt(0);
-                sc.nextLine();
+            System.out.println("Digite o ID do autor, 0 para registrar um novo autor ou 1 se for um autor desconhecido!");
+            int ID = sc.nextInt();
 
-                if (confirmation == 's') {
-                    author = authors.get(0);
-                    authorExists = true;
-                }
-                else {
-                    System.out.println("Tente digitar o ID novamente.");
+            if (ID == 0) {
+                library.registerAuthor(sc, dtf);
+            }
+
+            else if (ID == 1) {
+                library.addBooks(new Book(title, library.getAuthors().getFirst()));
+            }
+
+            else {
+                for(Author author : library.getAuthors()) {
+                    if (author.getId() == ID) {
+                        System.out.print("Todos os dados estão corretos (s/n)?");
+                        char confirmation = sc.next().charAt(0);
+
+                        if(confirmation == 's') {
+                            library.addBooks(new Book(title, author));
+                            isEverythingCorrect = true;
+                        }
+                        else {
+                            isEverythingCorrect = false;
+                        }
+                    }
                 }
             }
         }
-        books.add(new Book(title, author));
     }
 
     public void registerAuthor(Scanner sc, DateTimeFormatter dtf){
@@ -134,7 +140,7 @@ public class Library {
         String email = sc.nextLine();
         boolean clientExists = false;
 
-        Client newClient = new Client(name, bornDate, email);
+        Client newClient = new Client(name, bornDate, email, IsGuest.NOT_GUEST);
 
         while(!clientExists) {
             for (Client c : clients) {
@@ -163,13 +169,61 @@ public class Library {
         System.out.println();
         System.out.print("Digite o ID de um livro do catálogo para espréstimo: ");
         int id = sc.nextInt();
-        boolean bookFounded;
-        for(Book b : books) {
-            if(id == b.getID()) {
-                System.out.println("Livro selecionado com sucesso, data de devolução: " + dtf.format(LocalDate.now().plusWeeks(1)));
+        boolean bookFounded = false;
+
+        while(!bookFounded) {
+            if(loggedClient.getPending() == Pending.yes) {
+                System.out.println("Você já tem um empréstimo pendente, favor realizar a devolução antes de solicitar um novo empréstimo!");
+                bookFounded = true;
+            }
+            else {
+                for(Book b : books) {
+                    if(id == b.getID()) {
+                        System.out.println("Empréstimo realizado com sucesso! Data de devolução: " + LocalDate.now().plusWeeks(1));
+                        b.addLoanHistory(new History(loggedClient, LocalDate.now(), null));
+                        b.setDisponibility(Disponibility.unavailable);
+                        loggedClient.setPending(Pending.yes);
+                        bookFounded = true;
+                        break;
+                    }
+                }
             }
         }
-
     }
 
+    public void devolution(Client loggedClient, Library library, DateTimeFormatter dtf, Scanner sc) {
+        if(loggedClient.getBorrowedBook() == 0 || loggedClient.getPending() == Pending.no) {
+            System.out.println("Você não tem nenhum empréstimo pendente!");
+        }
+        else {
+            boolean validDate = false;
+            while (!validDate) {
+                try {
+                    System.out.print("Digite a data de retirada do livro (dd/MM/yyyy): ");
+                    LocalDate checkoutDate = LocalDate.parse(sc.nextLine());
+                    History history = new History(loggedClient, checkoutDate, null);
+
+                    for (Book b : library.getBooks()) {
+                        if (b.getID() == loggedClient.getBorrowedBook()) {
+                            for(History h : b.getLoanHistory()) {
+                                if (h.equals(history)) {
+                                    System.out.println("Devolução realizada com sucesso!");
+                                    h.setDueDate(LocalDate.now());
+                                    b.setDisponibility(Disponibility.available);
+                                    loggedClient.setBorrowedBook(0);
+                                    loggedClient.setPending(Pending.no);
+                                    b.setUpdateDate(LocalDate.now());
+                                    validDate = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (DateTimeParseException e) {
+                    System.out.println("Formato da data inválido, por favor tente novamente!");
+                }
+            }
+        }
+    }
 }

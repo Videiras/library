@@ -2,6 +2,7 @@ package services;
 
 import entities.*;
 import entities.enums.Disponibility;
+import entities.enums.Pending;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -10,15 +11,25 @@ import java.util.List;
 
 public class Importation {
 
-    public static void importCatalog(List<Author> authors, Library library, List<Client> client, String[] books) {
+    public static void importCatalog(List<Author> authors, Library library, List<Client> client) {
+
+        String path = ".\\books\\1 - Livros.txt";
+        String[] books = null;
+
+        try(BufferedReader br = new BufferedReader((new FileReader(path)))) {
+            books = br.readLine().split(",");
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
 
         for(String book : books) {
-            File file = new File(".\\books" + book + "\\" + book + ".txt");
+            File file = new File(".\\books\\" + book + "\\" + book + ".txt");
 
             try {
                 List<History> loanHistory = new ArrayList<>();
 
-                BufferedReader history = new BufferedReader(new FileReader(".\\books" + book + "\\loanHistory.txt"));
+                BufferedReader history = new BufferedReader(new FileReader(".\\books\\" + book + "\\Historico de emprestimos.txt"));
                 String historyLine = history.readLine();
                 while (historyLine != null) {
                     String[] historyItems = historyLine.split(",");
@@ -72,8 +83,10 @@ public class Importation {
                 String name = clientItems[1];
                 LocalDate BORN_DATE = LocalDate.parse(clientItems[2]);
                 String email = clientItems[3];
+                Pending pending = Pending.valueOf(clientItems[4]);
+                int borrowedBook = Integer.parseInt(clientItems[5]);
 
-                library.addClient(new Client(ID, name, BORN_DATE, email));
+                library.addClient(new Client(ID, name, BORN_DATE, email, pending, borrowedBook));
                 line = br.readLine();
             }
         }
@@ -91,7 +104,7 @@ public class Importation {
                 String[] authorItems = line.split(",");
                 int authorID = Integer.parseInt(authorItems[0]);
                 String name = authorItems[1];
-                LocalDate bornDate = LocalDate.parse(authorItems[3]);
+                LocalDate bornDate = LocalDate.parse(authorItems[2]);
 
                 authors.add(new Author(authorID, name, bornDate));
                 line = br.readLine();
