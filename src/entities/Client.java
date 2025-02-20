@@ -104,6 +104,8 @@ public class Client {
             + ","
             + pending
             + ","
+            + borrowedBook
+            + ","
             + isGuest;
     }
 

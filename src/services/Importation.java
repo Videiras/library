@@ -2,6 +2,7 @@ package services;
 
 import entities.*;
 import entities.enums.Disponibility;
+import entities.enums.IsGuest;
 import entities.enums.Pending;
 
 import java.io.*;
@@ -85,8 +86,9 @@ public class Importation {
                 String email = clientItems[3];
                 Pending pending = Pending.valueOf(clientItems[4]);
                 int borrowedBook = Integer.parseInt(clientItems[5]);
+                IsGuest isGuest = IsGuest.valueOf(clientItems[6]);
 
-                library.addClient(new Client(ID, name, BORN_DATE, email, pending, borrowedBook));
+                library.addClient(new Client(ID, name, BORN_DATE, email, pending, borrowedBook, isGuest));
                 line = br.readLine();
             }
         }
