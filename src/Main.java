@@ -59,7 +59,7 @@ public class Main {
                     library.loan(sc, loggedClient, dtf);
                 }
                 else {
-                    System.out.println("Somente client's com registro podem solicitar empréstimos!");
+                    System.out.println("Somente clientes com registro podem solicitar empréstimos!");
                 }
             }
 
