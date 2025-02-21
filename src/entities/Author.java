@@ -37,7 +37,7 @@ public class Author {
     public String toString(){
         return NAME
             + " | "
-            + "ID: "
+            + "ID do autor: "
             + ID;
     }
 

@@ -36,10 +36,19 @@ public class Importation {
                     String[] historyItems = historyLine.split(",");
                     int ClientID = Integer.parseInt(historyItems[0]);
                     LocalDate CHECKOUT_DATE = LocalDate.parse(historyItems[1]);
-                    LocalDate DUE_DATE = LocalDate.parse(historyItems[2]);
-                    for (Client c : client) {
-                        if (c.getID() == ClientID) {
-                            loanHistory.add(new History(c, CHECKOUT_DATE, DUE_DATE));
+                    if(!historyItems[2].equals("null")) {
+                        LocalDate DUE_DATE = LocalDate.parse(historyItems[2]);
+                        for (Client c : client) {
+                            if (c.getID() == ClientID) {
+                                loanHistory.add(new History(c, CHECKOUT_DATE, DUE_DATE));
+                            }
+                        }
+                    }
+                    else {
+                        for (Client c : client) {
+                            if (c.getID() == ClientID) {
+                                loanHistory.add(new History(c, CHECKOUT_DATE, null));
+                            }
                         }
                     }
                     historyLine = history.readLine();

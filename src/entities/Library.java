@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Library {
@@ -64,7 +65,7 @@ public class Library {
     public void registerBook(Scanner sc, DateTimeFormatter dtf, Library library) {
         boolean isEverythingCorrect = false;
         while(!isEverythingCorrect) {
-            System.out.println("Digite o título do livro: ");
+            System.out.print("Digite o título do livro: ");
             String title = sc.nextLine();
             System.out.println("Autores disponíveis: ");
 
@@ -74,6 +75,7 @@ public class Library {
 
             System.out.println("Digite o ID do autor, 0 para registrar um novo autor ou 1 se for um autor desconhecido!");
             int ID = sc.nextInt();
+            sc.nextLine();
 
             if (ID == 0) {
                 library.registerAuthor(sc, dtf);
@@ -90,6 +92,7 @@ public class Library {
                         char confirmation = sc.next().charAt(0);
 
                         if(confirmation == 's') {
+                            System.out.println("Livro: " + title + " adicionado ao catálogo!");
                             library.addBooks(new Book(title, author));
                             isEverythingCorrect = true;
                         }
@@ -179,10 +182,11 @@ public class Library {
             else {
                 for(Book b : books) {
                     if(id == b.getID()) {
-                        System.out.println("Empréstimo realizado com sucesso! Data de devolução: " + LocalDate.now().plusWeeks(1));
+                        System.out.println("Empréstimo realizado com sucesso! Data de devolução: " + dtf.format(LocalDate.now().plusWeeks(1)));
                         b.addLoanHistory(new History(loggedClient, LocalDate.now(), null));
                         b.setDisponibility(Disponibility.unavailable);
                         loggedClient.setPending(Pending.yes);
+                        loggedClient.setBorrowedBook(b.getID());
                         bookFounded = true;
                         break;
                     }
@@ -200,11 +204,11 @@ public class Library {
             while (!validDate) {
                 try {
                     System.out.print("Digite a data de retirada do livro (dd/MM/yyyy): ");
-                    LocalDate checkoutDate = LocalDate.parse(sc.nextLine());
+                    LocalDate checkoutDate = LocalDate.parse(sc.nextLine(), dtf);
                     History history = new History(loggedClient, checkoutDate, null);
 
                     for (Book b : library.getBooks()) {
-                        if (b.getID() == loggedClient.getBorrowedBook()) {
+                        if (Objects.equals(b.getID(), loggedClient.getBorrowedBook())) {
                             for(History h : b.getLoanHistory()) {
                                 if (h.equals(history)) {
                                     System.out.println("Devolução realizada com sucesso!");

@@ -38,6 +38,7 @@ public class Main {
             System.out.println("6 - Adicionar um livro ao catálogo");
             System.out.println("7 - Sair");
             int selection = sc.nextInt();
+            sc.nextLine();
 
             if (selection == 1) {
                 for (Book b : library.getBooks()) {
